@@ -183,7 +183,7 @@ EOF
 
 cat > /root/triage/README.md <<'EOF'
 /root/triage/tickets/   24 raw support tickets (plain text)
-/root/triage/adversarial/ 4 tickets that try to fool a triage bot (no labels; used in step 8)
+/root/triage/adversarial/ 4 tickets that try to fool a triage bot (no labels; used in step 10)
 /root/triage/labels.csv the gold labels: category (billing|technical|account|other), priority (low|medium|high)
 /root/triage/out/       your outputs go here: llm.jsonl, jev.jsonl, cascade.jsonl, report.json
 EOF
