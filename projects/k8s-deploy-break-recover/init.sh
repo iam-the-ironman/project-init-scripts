@@ -294,8 +294,8 @@ case "${1:-}" in
   2)
     need 2 1
     record 2
-    kubectl taint nodes ops-worker ops-worker2 maintenance=true:NoSchedule --overwrite >/dev/null
-    kubectl annotate nodes ops-worker ops-worker2 --overwrite \
+    kubectl taint nodes kind-worker kind-worker2 maintenance=true:NoSchedule --overwrite >/dev/null
+    kubectl annotate nodes kind-worker kind-worker2 --overwrite \
       escbash.io/maintenance="kernel patching window 2026-09-22 02:00-03:00 UTC, completed" >/dev/null
     set_value '^(web:\n  replicas: )2' '\g<1>4'
     upgrade "scale web to 4 for the sale"
@@ -320,12 +320,12 @@ case "${1:-}" in
 # Tonight's maintenance
 
 1. Users report that the shop's web page is broken. Make it serve again.
-2. ops-worker2 is being patched tonight. Drain it:
+2. kind-worker2 is being patched tonight. Drain it:
 
-       kubectl drain ops-worker2 --ignore-daemonsets --delete-emptydir-data 2>&1 | tee /root/k8s-ops/drain.log
+       kubectl drain kind-worker2 --ignore-daemonsets --delete-emptydir-data 2>&1 | tee /root/k8s-ops/drain.log
 
-   The shop must keep serving from ops-worker while ops-worker2 is out.
-3. When the drain has finished, bring ops-worker2 back with kubectl uncordon.
+   The shop must keep serving from kind-worker while kind-worker2 is out.
+3. When the drain has finished, bring kind-worker2 back with kubectl uncordon.
 
 Every change to how the shop runs goes through values-prod.yaml and helm upgrade.
 MD
@@ -345,7 +345,7 @@ values-prod.yaml   the environment's settings: change things here, then helm upg
 break.sh           plants one incident at a time: 1, 2, 3, then mystery
 
 Install:  helm install shop ./chart -n shop --create-namespace -f values-prod.yaml --wait
-Cluster:  kind create cluster --name ops --config /root/kind-multinode.yaml
+Cluster:  already running (kind: kind-control-plane, kind-worker, kind-worker2) - kubectl get nodes
 ESCBASH_EOF
 written=$((written+1))
 fi
